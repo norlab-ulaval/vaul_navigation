@@ -1,0 +1,5 @@
+add_goals_service: "add_goal"
+remove_goals_service: "remove_goal"
+modify_goals_service: "modify_goal"
+new_goal_topic: "/move_base_simple/goal"
+goals_topic: "goals" 

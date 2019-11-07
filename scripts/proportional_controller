@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+import rospy
+from vaul_navigation import ProportionalController
+
+def fetch_parameters(parameters):
+    for key in parameters:
+        try:
+            parameters[key] = rospy.get_param("~" + key)
+        except KeyError:
+            rospy.logerr("Parameter %s could not be retrieved in proportional_controller" % key)
+            exit(1)
+        except:
+            rospy.logerr("Error in retrieving parameter in proportional_controller")
+            raise
+
+if __name__ == "__main__":
+
+    rospy.init_node("proportional_controller")
+
+    # Fetch parameters
+    keys = [
+        "frame_id",
+        "frequency",
+        "linear_gain",
+        "angular_gain",
+        "max_linear_speed",
+        "max_angular_speed",
+        "linear_tolerance",
+        "angular_tolerance",
+        "pose_topic",
+        "goal_topic",
+        "joy_topic",
+        "cmd_vel_topic",
+        "deadman_switch_button",
+        "max_time_without_deadman_switch",
+        "max_time_without_pose"
+    ]
+    parameters = dict.fromkeys(keys, None)
+    fetch_parameters(parameters)
+    
+    # Instantiate controller
+    proportional_controller = ProportionalController(parameters["frame_id"], parameters["linear_gain"], \
+        parameters["angular_gain"], parameters["max_linear_speed"], parameters["max_angular_speed"], \
+        parameters["linear_tolerance"], parameters["angular_tolerance"])
+
+    # Enable publishing and subscribing
+    proportional_controller.enable_pose_subscribing(parameters["pose_topic"])
+    proportional_controller.enable_joy_subscribing(parameters["joy_topic"])
+    proportional_controller.enable_goal_array_subscribing(parameters["goal_topic"])
+    proportional_controller.enable_cmd_vel_publishing(parameters["cmd_vel_topic"])
+
+    # Start control loop
+    proportional_controller.start(parameters["frequency"], parameters["deadman_switch_button"], \
+        parameters["max_time_without_deadman_switch"], parameters["max_time_without_pose"])
+    
+    rospy.spin()

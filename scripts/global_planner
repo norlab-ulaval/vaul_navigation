@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+from vaul_navigation import GlobalPlanner
+import rospy
+
+def fetch_parameters(parameters):
+    for key in parameters:
+        try:
+            parameters[key] = rospy.get_param("~" + key)
+        except KeyError:
+            rospy.logerr("Parameter %s could not be retrieved in global planner" % key)
+            exit(1)
+        except:
+            rospy.logerr("Error in retrieving parameter in global planner")
+            raise
+
+if __name__ == "__main__":
+     
+    rospy.init_node("global_planner")
+
+    # Fetch parameters    
+    keys = [
+        "id_base",
+        "robot_frame_id",
+        "pose_update_frequency",
+        "completion_check_frequency",
+        "completion_distance",
+        "add_goal_service",
+        "remove_goal_service",
+        "clear_goals_service",
+        "modify_goal_service",
+        "publish_goals_frequency",
+        "publish_goals_topic"
+    ]
+    parameters = dict.fromkeys(keys, None)
+    fetch_parameters(parameters)
+
+    # Instanciate global planner
+    global_planner = GlobalPlanner(parameters["id_base"], parameters["robot_frame_id"], parameters["pose_update_frequency"], \
+        parameters["completion_check_frequency"], parameters["completion_distance"])
+
+    # Enable services
+    global_planner.enable_add_goal_srv(parameters["add_goal_service"])
+    global_planner.enable_remove_goal_srv(parameters["remove_goal_service"])
+    global_planner.enable_clear_goals_srv(parameters["clear_goals_service"])
+    global_planner.enable_modify_goal_srv(parameters["modify_goal_service"])
+    global_planner.enable_publish_goals_periodically(parameters["publish_goals_frequency"], parameters["publish_goals_topic"])
+
+    rospy.loginfo("Global planner started!")
+
+    rospy.spin()

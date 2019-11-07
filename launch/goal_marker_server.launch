@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="config" default="default"/>
+
+    <group ns="vaul_navigation">
+        
+        <node pkg="vaul_navigation" type="goal_marker_server" name="goal_marker_server" output="screen">
+            <rosparam file="$(find vaul_navigation)/config/goal_marker_server/$(arg config).yaml" command="load"/>
+        </node>
+        
+    </group>
+
+</launch>

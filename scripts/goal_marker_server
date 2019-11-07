@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+from vaul_navigation import GoalMarkerServer
+import rospy
+
+def fetch_parameters(parameters):
+    for key in parameters:
+        try:
+            parameters[key] = rospy.get_param("~" + key)
+        except KeyError:
+            rospy.logerr("Parameter %s could not be retrieved in goal marker server" % key)
+            exit(1)
+        except:
+            rospy.logerr("Error in retrieving parameter in goal marker server")
+            raise
+
+if __name__ == "__main__":
+    rospy.init_node("goal_marker_server")
+
+    # Retrieve parameters
+    keys = [
+        "add_goals_service",
+        "remove_goals_service",
+        "modify_goals_service",
+        "new_goal_topic",
+        "goals_topic"
+    ]
+    parameters = dict.fromkeys(keys, None)
+    fetch_parameters(parameters)
+
+    # Instanciate goal marker server
+    goal_marker_server = GoalMarkerServer(parameters["add_goals_service"], parameters["remove_goals_service"],\
+        parameters["modify_goals_service"])
+
+    # Enable subscribing for new goals and registered goals
+    goal_marker_server.enable_new_goal_subscribing(parameters["new_goal_topic"])
+    goal_marker_server.enable_goals_subscribing(parameters["goals_topic"])
+
+    rospy.spin()

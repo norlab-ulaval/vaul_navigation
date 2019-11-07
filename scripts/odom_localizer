@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import rospy
+from vaul_navigation import OdomLocalizer
+
+def fetch_parameters(parameters):
+    for key in parameters:
+        try:
+            parameters[key] = rospy.get_param("~" + key)
+        except KeyError:
+            rospy.logerr("Parameter %s could not be retrieved in odom_localizer" % key)
+            exit(1)
+        except:
+            rospy.logerr("Error in retrieving parameter in odom_localizer")
+            raise
+
+if __name__ == "__main__":
+    rospy.init_node("odom_localizer")
+
+    keys = [
+        "odom_topic", 
+        "pose_topic",
+        "pose_array_topic"
+    ]
+    parameters = dict.fromkeys(keys, None)
+    fetch_parameters(parameters)
+
+    # Start localizer and subscribers/publishers
+    rospy.loginfo("Starting localizer...")
+
+    # Instantiate localizer
+    odom_localizer = OdomLocalizer()
+
+    # Start subscribers and publishers
+    odom_localizer.enable_odom_subscribing(parameters["odom_topic"])
+    odom_localizer.enable_pose_publishing(parameters["pose_topic"])
+    odom_localizer.enable_pose_array_publishing(parameters["pose_array_topic"])
+
+    rospy.loginfo("Localizer started!")
+
+    rospy.spin()

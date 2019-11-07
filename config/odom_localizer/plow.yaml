@@ -1,0 +1,3 @@
+odom_topic: "/odometry/filtered"
+pose_topic: "odom_pose"
+pose_array_topic: "odom_pose_array"

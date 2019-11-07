@@ -1,0 +1,15 @@
+frame_id: "base_link"
+frequency: 30 #[Hz]
+linear_gain: 0.5
+angular_gain: 0.8
+max_linear_speed: 0.75 #[m/s]
+max_angular_speed: 0.6 #[rad/s]
+linear_tolerance: 0.5 #[m]
+angular_tolerance: 0.1 #[rad]
+pose_topic: "icp_pose"
+goal_topic: "goals"
+joy_topic: "/joy_teleop/joy"
+cmd_vel_topic: "/cmd_vel"
+deadman_switch_button: 0
+max_time_without_deadman_switch: 1.0 #s
+max_time_without_pose: 2.0 #s

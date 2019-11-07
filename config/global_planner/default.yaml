@@ -1,0 +1,11 @@
+id_base: "goal_"
+robot_frame_id: "base_link" 
+pose_update_frequency: 2
+completion_check_frequency: 2
+completion_distance: 1
+add_goal_service: "add_goal"
+remove_goal_service: "remove_goal"
+clear_goals_service: "clear_goals"
+modify_goal_service: "modify_goal"
+publish_goals_frequency: 0.2
+publish_goals_topic: "goals"

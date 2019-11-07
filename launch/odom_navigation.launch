@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="proportional_controller_config" default="odom"/>
+    <arg name="planner_config" default="default"/>
+    <arg name="localizer_config" default="plow"/>
+
+    <group ns="vaul_navigation">
+
+        <node pkg="vaul_navigation" type="proportional_controller" name="proportional_controller" output="screen">
+            <rosparam file="$(find vaul_navigation)/config/proportional_controller/$(arg proportional_controller_config).yaml" command="load"/>
+        </node>
+
+        <node pkg="vaul_navigation" type="global_planner" name="global_planner" output="screen">
+            <rosparam file="$(find vaul_navigation)/config/global_planner/$(arg planner_config).yaml" command="load"/>
+        </node>
+
+        <node pkg="vaul_navigation" type="odom_localizer" name="odom_localizer" output="screen">
+            <rosparam file="$(find vaul_navigation)/config/odom_localizer/$(arg localizer_config).yaml" command="load"/>
+        </node>        
+    
+    </group>
+
+</launch>
