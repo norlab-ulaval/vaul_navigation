@@ -8,7 +8,7 @@ linear_tolerance: 0.5 #[m]
 angular_tolerance: 0.1 #[rad]
 pose_topic: "odom_pose"
 goal_topic: "goals"
-joy_topic: "/joy_teleop/joy"
+joy_topic: "/joy"
 cmd_vel_topic: "/cmd_vel"
 deadman_switch_button: 0
 max_time_without_deadman_switch: 1.0 #s
