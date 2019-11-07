@@ -121,6 +121,9 @@ class ProportionalController(object):
                         angular_vel = self.max_angular_speed
                     elif(angular_vel <= -self.max_angular_speed):
                         angular_vel = -self.max_angular_speed
+
+                    if abs(angle_to_goal) > self.angular_tolerance:
+                        linear_vel = 0
                             
                     self.cmd_vel.linear.x = linear_vel
                     self.cmd_vel.angular.z = angular_vel
